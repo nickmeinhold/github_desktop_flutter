@@ -1,0 +1,3 @@
+class GitHubService {
+  GitHubService();
+}
