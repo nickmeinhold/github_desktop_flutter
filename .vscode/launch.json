@@ -5,9 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Flutter",
+            "name": "macOS",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "deviceId": "macOS"
+        },
+        {
+            "name": "Web",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main_web.dart",
+            "deviceId": "chrome"
         }
     ]
 }

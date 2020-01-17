@@ -12,7 +12,7 @@ part 'serializers.g.dart';
 /// Once per app, define a top level "Serializer" to gather together
 /// all the generated serializers.
 ///
-/// Collection of generated serializers for the Silicon Beach app
+/// Collection of generated serializers for the Flutter Github Desktop app
 @SerializersFor([Problem, AppState, User])
 final Serializers serializers = (_$serializers.toBuilder()
       ..addPlugin(StandardJsonPlugin())

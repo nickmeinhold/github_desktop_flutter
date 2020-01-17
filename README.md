@@ -7,8 +7,9 @@ State Management
 - flutter_redux 
 
 Auth 
-- firebase_auth 
 - custom github auth 
+  - flutter web app 
+  - cloud functions 
 
 ## Code gen for built_value 
 
@@ -23,8 +24,8 @@ flutter pub run build_runner build
 Run on port 5000, as localhost:5000 is [whitelisted for Google authentication](https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_auth/firebase_auth/example):
 
 ```Dart
-flutter run -d web-server --web-port 5000
-flutter run -d chrome --web-port 5000
+flutter run -t lib/main_web.dart -d web-server --web-port 5000
+flutter run -t lib/main_web.dart -d chrome --web-port 5000
 ```
 
 ### Issues 
@@ -36,28 +37,10 @@ When running locally, the firebase configuration won't work as it is using reser
 Using CDNs as in `web/index_ddc.html` will work. 
 - note: this file is not checked in to the repo
 
-#### Google Sign in 
-
-When launching from VS Code debug, attempting to sign in produces:
-
-```
-“Browser or app may not be secure. Try using a different browser.”
-```
-
-Probably due to running chrome with remote debugging, see [this SO question](https://stackoverflow.com/questions/59480956/browser-or-app-may-not-be-secure-try-using-a-different-browser-error-with-fl)
-
-Either run without debugging: 
-
-```Dart
-flutter run -d web-server --web-port 5000
-```
-
-Or use `AltAuthService` in place of `AuthService`, which emits a user from the stream of auth state and avoids the need to sign in.
-
 ## Building 
 
 ``` 
-flutter build web 
+flutter build web -t lib/main_web.dart
 ```
 
 ## Deploying 
@@ -89,7 +72,7 @@ Specify your site in firebase.json
 ```Json
 {
   "hosting": {
-    "site": "silicon-beach-admin",
+    "site": "flutter-github-desktop",
     "public": "public",
     ...
   }
@@ -99,10 +82,10 @@ Specify your site in firebase.json
 ### Deploy 
 
 ```Dart
-firebase deploy --only hosting:silicon-beach-admin
+firebase deploy --only hosting:flutter-github-desktop
 ```
 
-After deploying, view at `https://silicon-beach-admin.web.app/`
+After deploying, view at `https://flutter-github-desktop.web.app/`
 
 ## Redux RemoteDevTools (RDT) 
 

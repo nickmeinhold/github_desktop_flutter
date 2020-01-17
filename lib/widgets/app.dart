@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart' hide Action;
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:github_desktop_flutter/services/github_service.dart';

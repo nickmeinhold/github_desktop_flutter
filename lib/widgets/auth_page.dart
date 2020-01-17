@@ -2,6 +2,7 @@ import 'package:flutter/material.dart' hide Action;
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:github_desktop_flutter/models/actions.dart';
 import 'package:github_desktop_flutter/models/app_state.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AuthPage extends StatefulWidget {
   @override
@@ -21,8 +22,7 @@ class _AuthPageState extends State<AuthPage> {
             children: <Widget>[
               RaisedButton(
                 child: const Text('SIGN IN'),
-                onPressed: () => StoreProvider.of<AppState>(context)
-                    .dispatch(Action.SigninWithGoogle()),
+                onPressed: () => _launchURL(),
               ),
               Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -39,5 +39,16 @@ class _AuthPageState extends State<AuthPage> {
             ],
           );
         });
+  }
+
+  _launchURL() async {
+    const String url = 'https://github.com/login/oauth/authorize' +
+        '?client_id=987bd965a05598c5e090' +
+        '&scope=public_repo%20read:user%20user:email';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

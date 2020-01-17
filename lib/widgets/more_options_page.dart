@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class MoreOptionsPage extends StatelessWidget {
@@ -13,7 +12,6 @@ class MoreOptionsPage extends StatelessWidget {
             child: Text('SIGN OUT'),
             onPressed: () {
               // TODO: Sign out of github
-              FirebaseAuth.instance.signOut();
             },
           ),
         )
