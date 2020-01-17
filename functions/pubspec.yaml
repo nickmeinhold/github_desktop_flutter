@@ -1,0 +1,15 @@
+name: flutter_github_desktop_functions
+description: Firebase Functions for Flutter Github Desktop
+version: 0.0.1
+
+environment:
+  sdk: '>=2.7.0 <3.0.0'
+
+dependencies:
+  # Firebase Functions bindings
+  firebase_functions_interop: ^1.0.0
+
+dev_dependencies:
+  # Needed to compile Dart to valid Node.js module.
+  build_runner: ^1.0.0
+  build_node_compilers: ^0.2.0
