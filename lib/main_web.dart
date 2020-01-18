@@ -15,7 +15,8 @@ class WebApp extends StatelessWidget {
       home: Center(
         child: FutureBuilder(
             future: http.read(
-                'https://us-central1-flutter-github-desktop.cloudfunctions.net/helloWorld'),
+                'https://us-central1-flutter-github-desktop.cloudfunctions.net/getToken',
+                headers: uri?.queryParameters),
             builder: (context, AsyncSnapshot<String> snapshot) {
               if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
@@ -39,14 +40,13 @@ class WebApp extends StatelessWidget {
                 case ConnectionState.done:
 
                   /// Connected to a terminated asynchronous computation.
-                  return Text('Done: ${snapshot.data}');
+                  return SelectableText('Done: ${snapshot.data}');
                   break;
 
                 default:
                   return Text('Unknown');
               }
             }),
-        // Text(uri?.queryParameters.toString()),
       ),
     );
   }

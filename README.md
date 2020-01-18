@@ -7,13 +7,13 @@ A Github Desktop inspired app for MacOS, made with Flutter.
 
 ## Common commands 
 
-built_value 
+### built_value 
 
 ```
 flutter pub run build_runner build
 ```
 
-web app 
+### web app 
 
 ``` 
 flutter build web -t lib/main_web.dart
@@ -21,11 +21,11 @@ cd build/web
 firebase deploy --only hosting:flutter-github-desktop
 ```
 
-firebase functions
+### firebase functions
 
-```
+```Dart
 cd functions
-pub run build_runner build --output=build
+--> (Dart only) pub run build_runner build --output=build
 firebase deploy --only functions
 ```
 
@@ -47,13 +47,13 @@ When running locally, the firebase configuration won't work as it is using reser
 Using CDNs as in `web/index_ddc.html` will work. 
 - note: this file is not checked in to the repo
 
-## Building 
+## Building the Web App 
 
 ``` 
 flutter build web -t lib/main_web.dart
 ```
 
-## Deploying 
+## Deploying the Web App 
 
 ### Setup 
 
@@ -98,6 +98,10 @@ firebase deploy --only hosting:flutter-github-desktop
 ## Firebase functions 
 
 see [Firebase Functions Interop Library for Dart](https://github.com/pulyaevskiy/firebase-functions-interop) for setup instructions 
+
+```
+firebase functions:config:set github.client_id="YOUR_CLIENT_ID" github.client_secret="YOUR_CLIENT_SECRET"
+```
 
 ### Extra setup 
 
