@@ -1,10 +1,12 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart' hide Action;
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:github_desktop_flutter/models/profile.dart';
 import 'package:github_desktop_flutter/services/github_service.dart';
+import 'package:github_desktop_flutter/services/platform_service.dart';
 import 'package:redux/redux.dart';
 import 'package:github_desktop_flutter/models/actions.dart';
 import 'package:github_desktop_flutter/models/app_state.dart';
-import 'package:github_desktop_flutter/models/user.dart';
 import 'package:github_desktop_flutter/redux/middleware.dart';
 import 'package:github_desktop_flutter/redux/reducers.dart';
 import 'package:github_desktop_flutter/widgets/auth_page.dart';
@@ -31,7 +33,8 @@ class _GDFAppState extends State<GDFApp> {
           initialState: AppState.init(),
           middleware: [
             ...createMiddleware(
-              GitHubService(),
+              PlatformService(),
+              GitHubService(Dio()),
             ),
           ],
         );
@@ -44,16 +47,16 @@ class _GDFAppState extends State<GDFApp> {
     return MaterialApp(
       home: StoreProvider<AppState>(
         store: store,
-        child: StoreConnector<AppState, User>(
+        child: StoreConnector<AppState, Profile>(
           distinct: true,
-          converter: (store) => store.state.user,
-          builder: (context, user) {
-            return (user == null || user.uid == null) ? AuthPage() : MainPage();
+          converter: (store) => store.state.profile,
+          builder: (context, profile) {
+            return (profile == null || profile.id == null)
+                ? AuthPage()
+                : MainPage();
           },
         ),
       ),
     );
   }
 }
-
-class GithubService {}

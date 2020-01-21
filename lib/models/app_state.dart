@@ -6,8 +6,8 @@ import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:github_desktop_flutter/models/problem.dart';
+import 'package:github_desktop_flutter/models/profile.dart';
 import 'package:github_desktop_flutter/models/serializers.dart';
-import 'package:github_desktop_flutter/models/user.dart';
 
 part 'app_state.g.dart';
 
@@ -16,7 +16,9 @@ abstract class AppState implements Built<AppState, AppStateBuilder> {
   int get authStep;
 
   @nullable
-  User get user;
+  String get authToken;
+  @nullable
+  Profile get profile;
 
   // collections
   BuiltList<Problem> get problems;

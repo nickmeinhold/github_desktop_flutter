@@ -19,10 +19,12 @@ void main() {
   testWidgets('MainPage displays...', (WidgetTester tester) async {
     // create an initial state with a user
     final appState = AppState.init().rebuild((b) => b
-      ..user.uid = 'uid'
-      ..user.email = 'nick.meinhold@gmail.com'
-      ..user.displayName = 'Nick'
-      ..user.photoUrl = 'url');
+      ..profile.id = 1
+      ..profile.login = 'nickm'
+      ..profile.email = 'nick.meinhold@gmail.com'
+      ..profile.name = 'Nick'
+      ..profile.avatarUrl = 'url'
+      ..profile.location = 'Melbourne');
     final store = Store<AppState>(appReducer, initialState: appState);
 
     final textFinder = find.text('Nick');

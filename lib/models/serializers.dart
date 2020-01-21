@@ -4,8 +4,7 @@ import 'package:built_value/serializer.dart';
 import 'package:built_value/standard_json_plugin.dart';
 import 'package:github_desktop_flutter/models/app_state.dart';
 import 'package:github_desktop_flutter/models/problem.dart';
-import 'package:github_desktop_flutter/models/provider_info.dart';
-import 'package:github_desktop_flutter/models/user.dart';
+import 'package:github_desktop_flutter/models/profile.dart';
 
 part 'serializers.g.dart';
 
@@ -13,7 +12,7 @@ part 'serializers.g.dart';
 /// all the generated serializers.
 ///
 /// Collection of generated serializers for the Flutter Github Desktop app
-@SerializersFor([Problem, AppState, User])
+@SerializersFor([Problem, AppState, Profile])
 final Serializers serializers = (_$serializers.toBuilder()
       ..addPlugin(StandardJsonPlugin())
       ..add(Iso8601DateTimeSerializer()))

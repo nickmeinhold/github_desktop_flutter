@@ -11,6 +11,13 @@
             "deviceId": "macOS"
         },
         {
+            "name": "macOS_rdt",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main_rdt.dart",
+            "deviceId": "macOS"
+        },
+        {
             "name": "Web",
             "request": "launch",
             "type": "dart",
