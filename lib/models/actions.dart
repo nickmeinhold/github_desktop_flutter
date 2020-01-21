@@ -20,6 +20,7 @@ class Action {
   factory Action.StoreProfile({@required Profile profile}) =>
       StoreProfile(profile: profile);
   factory Action.LaunchAuthPage() => LaunchAuthPage();
+  factory Action.CheckForAuthToken() => CheckForAuthToken();
 }
 
 class ObserveAuthState extends Action {
@@ -59,4 +60,8 @@ class StoreProfile extends Action {
 
 class LaunchAuthPage extends Action {
   LaunchAuthPage() : super(<String, Object>{});
+}
+
+class CheckForAuthToken extends Action {
+  CheckForAuthToken() : super(<String, Object>{});
 }

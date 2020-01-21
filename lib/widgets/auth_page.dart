@@ -13,6 +13,7 @@ class _AuthPageState extends State<AuthPage> {
   Widget build(BuildContext context) {
     return StoreConnector<AppState, int>(
         distinct: true,
+        onInit: (store) => store.dispatch(CheckForAuthToken()),
         converter: (store) => store.state.authStep,
         builder: (context, authStep) {
           return Scaffold(
@@ -20,13 +21,19 @@ class _AuthPageState extends State<AuthPage> {
               alignment: Alignment.center,
               index: authStep,
               children: <Widget>[
+                Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      CircularProgressIndicator(),
+                      Text('Checking for auth token...')
+                    ]),
                 RaisedButton(
                   child: const Text('SIGN IN'),
                   onPressed: () {
                     StoreProvider.of<AppState>(context)
                         .dispatch(Action.LaunchAuthPage());
                     StoreProvider.of<AppState>(context)
-                        .dispatch(Action.StoreAuthStep(step: 1));
+                        .dispatch(Action.StoreAuthStep(step: 2));
                   },
                 ),
                 TokenEntry(),
@@ -65,7 +72,7 @@ class _TokenEntryState extends State<TokenEntry> {
           child: Icon(Icons.swap_vert),
           onPressed: () {
             StoreProvider.of<AppState>(context)
-                .dispatch(Action.StoreAuthStep(step: 2));
+                .dispatch(Action.StoreAuthStep(step: 3));
             StoreProvider.of<AppState>(context)
                 .dispatch(Action.StoreAuthToken(token: token));
           },

@@ -24,6 +24,9 @@ List<Middleware<AppState>> createMiddleware(
     TypedMiddleware<AppState, LaunchAuthPage>(
       _launchAuthPage(platformService),
     ),
+    TypedMiddleware<AppState, CheckForAuthToken>(
+      _checkForAuthToken(platformService),
+    ),
   ];
 }
 
@@ -65,6 +68,31 @@ void Function(Store<AppState> store, LaunchAuthPage action, NextDispatcher next)
 
     try {
       platformService.launch(url: url);
+    } catch (error, trace) {
+      store.dispatch(AddProblem(
+        problem: Problem((b) => b
+          ..type = ProblemTypeEnum.signin
+          ..message = error.toString()
+          ..trace = trace.toString()),
+      ));
+    }
+  };
+}
+
+void Function(
+        Store<AppState> store, CheckForAuthToken action, NextDispatcher next)
+    _checkForAuthToken(PlatformService platformService) {
+  return (Store<AppState> store, CheckForAuthToken action,
+      NextDispatcher next) async {
+    next(action);
+
+    try {
+      final token = await platformService.retrieveToken();
+      if (token != null) {
+        store.dispatch(StoreAuthToken(token: token));
+      } else {
+        store.dispatch(StoreAuthStep(step: 1));
+      }
     } catch (error, trace) {
       store.dispatch(AddProblem(
         problem: Problem((b) => b
