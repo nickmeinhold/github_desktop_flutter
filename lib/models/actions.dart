@@ -1,6 +1,6 @@
+import 'package:github_desktop_flutter/models/profile.dart';
 import 'package:meta/meta.dart';
 import 'package:github_desktop_flutter/models/problem.dart';
-import 'package:github_desktop_flutter/models/user.dart';
 
 class Action {
   const Action(this.propsMap);
@@ -9,21 +9,21 @@ class Action {
   Map<String, dynamic> toJson() => propsMap;
 
   factory Action.ObserveAuthState() => ObserveAuthState();
-  factory Action.StoreUser({@required User user}) => StoreUser(user: user);
   factory Action.SigninWithGoogle() => SigninWithGoogle();
   factory Action.StoreAuthStep({@required int step}) =>
       StoreAuthStep(step: step);
   factory Action.AddProblem({@required Problem problem}) =>
       AddProblem(problem: problem);
+  factory Action.RetrieveProfile() => RetrieveProfile();
+  factory Action.StoreAuthToken({@required String token}) =>
+      StoreAuthToken(token: token);
+  factory Action.StoreProfile({@required Profile profile}) =>
+      StoreProfile(profile: profile);
+  factory Action.LaunchAuthPage() => LaunchAuthPage();
 }
 
 class ObserveAuthState extends Action {
   const ObserveAuthState() : super(const <String, Object>{});
-}
-
-class StoreUser extends Action {
-  StoreUser({@required this.user}) : super(<String, Object>{'user': user});
-  final User user;
 }
 
 class SigninWithGoogle extends Action {
@@ -39,4 +39,24 @@ class AddProblem extends Action {
   AddProblem({@required this.problem})
       : super(<String, Object>{'problem': problem});
   final Problem problem;
+}
+
+class RetrieveProfile extends Action {
+  RetrieveProfile() : super(<String, Object>{});
+}
+
+class StoreAuthToken extends Action {
+  StoreAuthToken({@required this.token})
+      : super(<String, Object>{'token': token});
+  final String token;
+}
+
+class StoreProfile extends Action {
+  StoreProfile({@required this.profile})
+      : super(<String, Object>{'profile': profile});
+  final Profile profile;
+}
+
+class LaunchAuthPage extends Action {
+  LaunchAuthPage() : super(<String, Object>{});
 }

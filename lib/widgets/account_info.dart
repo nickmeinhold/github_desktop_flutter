@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:github_desktop_flutter/models/profile.dart';
 import 'package:redux/redux.dart';
 import 'package:github_desktop_flutter/models/app_state.dart';
-import 'package:github_desktop_flutter/models/user.dart';
 import 'package:github_desktop_flutter/widgets/account_avatar.dart';
 
 class AccountInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, User>(
+    return StoreConnector<AppState, Profile>(
         distinct: true,
-        converter: (Store<AppState> store) => store.state.user,
-        builder: (BuildContext context, User user) {
+        converter: (Store<AppState> store) => store.state.profile,
+        builder: (BuildContext context, Profile profile) {
           return Row(children: [
-            AccountAvatar(user),
+            AccountAvatar(profile),
             Padding(
               padding: const EdgeInsets.only(right: 10),
               child: Column(
@@ -21,11 +21,11 @@ class AccountInfo extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      user.displayName,
+                      profile.name,
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      user.email,
+                      profile.email,
                       style: DefaultTextStyle.of(context)
                           .style
                           .apply(fontSizeFactor: 0.8),

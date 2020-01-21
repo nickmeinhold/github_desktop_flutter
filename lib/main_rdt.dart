@@ -1,5 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:github_desktop_flutter/services/github_service.dart';
+import 'package:github_desktop_flutter/services/platform_service.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_remote_devtools/redux_remote_devtools.dart';
 import 'package:github_desktop_flutter/redux/middleware.dart';
@@ -18,7 +20,8 @@ void main() async {
     middleware: [
       remoteDevtools,
       ...createMiddleware(
-        GitHubService(),
+        PlatformService(),
+        GitHubService(Dio()),
       ),
     ],
   );

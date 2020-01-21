@@ -1,8 +1,6 @@
-import 'package:built_collection/built_collection.dart';
 import 'package:github_desktop_flutter/models/app_state.dart';
 import 'package:github_desktop_flutter/models/problem.dart';
-import 'package:github_desktop_flutter/models/provider_info.dart';
-import 'package:github_desktop_flutter/models/user.dart';
+import 'package:github_desktop_flutter/models/profile.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -10,11 +8,11 @@ void main() {
   /// -- Non-nullable
   ///
   /// int authStep
-  /// int mainPageIndex
   ///
   /// -- Nullable
   ///
-  /// User user
+  /// String authToken
+  /// Profile profile
   ///
   /// -- Collections
   ///
@@ -25,24 +23,19 @@ void main() {
       final appState = AppState((b) => b..authStep = 0);
 
       expect(appState.authStep, 0);
+      expect(appState.authToken, null);
+      expect(appState.profile, null);
       expect(appState.problems, []);
-      expect(appState.user, null);
     });
 
     test('members take expected values', () {
-      final providerInfo = ProviderInfo((b) => b
-        ..displayName = 'name'
-        ..providerId = 'provider'
-        ..photoUrl = 'url'
+      final profile = Profile((a) => a
+        ..login = 'login'
         ..email = 'email'
-        ..uid = 'uid');
-
-      final user = User((a) => a
-        ..email = 'email'
-        ..uid = 'id'
-        ..displayName = 'name'
-        ..photoUrl = 'url'
-        ..providers = ListBuilder([providerInfo]));
+        ..id = 1
+        ..name = 'name'
+        ..avatarUrl = 'url'
+        ..location = 'Melbourne');
 
       final problem = Problem((a) => a
         ..message = 'message'
@@ -53,12 +46,14 @@ void main() {
 
       final appState = AppState((b) => b
         ..authStep = 0
+        ..authToken = 'token'
         ..problems.add(problem)
-        ..user.replace(user));
+        ..profile.replace(profile));
 
       expect(appState.authStep, 0);
+      expect(appState.authToken, 'token');
       expect(appState.problems, [problem]);
-      expect(appState.user, user);
+      expect(appState.profile, profile);
     });
   });
 }
