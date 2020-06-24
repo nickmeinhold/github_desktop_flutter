@@ -3,10 +3,10 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:github_desktop_flutter/actions/auth/store_auth_step.dart';
 import 'package:github_desktop_flutter/enums/auth_step.dart';
-import 'package:redux/redux.dart';
 import 'package:github_desktop_flutter/models/app/app_state.dart';
-import 'package:github_desktop_flutter/redux/reducers.dart';
+import 'package:github_desktop_flutter/reducers/reducers.dart';
 import 'package:github_desktop_flutter/widgets/auth_page.dart';
+import 'package:redux/redux.dart';
 
 void main() {
   group('AuthPage', () {

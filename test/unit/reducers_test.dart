@@ -5,10 +5,10 @@ import 'package:github_desktop_flutter/actions/problems/add_problem.dart';
 import 'package:github_desktop_flutter/actions/profile/store_profile.dart';
 import 'package:github_desktop_flutter/enums/auth_step.dart';
 import 'package:github_desktop_flutter/enums/problem_type.dart';
-import 'package:github_desktop_flutter/models/profile/profile.dart';
-import 'package:redux/redux.dart';
 import 'package:github_desktop_flutter/models/app/app_state.dart';
-import 'package:github_desktop_flutter/redux/reducers.dart';
+import 'package:github_desktop_flutter/models/profile/profile.dart';
+import 'package:github_desktop_flutter/reducers/reducers.dart';
+import 'package:redux/redux.dart';
 import 'package:test/test.dart';
 
 void main() {

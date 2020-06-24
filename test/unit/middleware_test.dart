@@ -1,8 +1,8 @@
 import 'package:github_desktop_flutter/actions/auth/launch_auth_page.dart';
 import 'package:github_desktop_flutter/actions/auth/store_auth_token.dart';
-import 'package:github_desktop_flutter/models/app/app_state.dart';
 import 'package:github_desktop_flutter/middleware/middleware.dart';
-import 'package:github_desktop_flutter/redux/reducers.dart';
+import 'package:github_desktop_flutter/models/app/app_state.dart';
+import 'package:github_desktop_flutter/reducers/reducers.dart';
 import 'package:github_desktop_flutter/services/github_service.dart';
 import 'package:mockito/mockito.dart';
 import 'package:redux/redux.dart';

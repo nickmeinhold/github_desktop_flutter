@@ -1,3 +1,4 @@
+import 'package:github_desktop_flutter/actions/auth/sign_out.dart';
 import 'package:github_desktop_flutter/actions/auth/store_auth_step.dart';
 import 'package:github_desktop_flutter/actions/auth/store_auth_token.dart';
 import 'package:github_desktop_flutter/actions/problems/add_problem.dart';
@@ -14,7 +15,7 @@ final appReducer = combineReducers<AppState>([
   TypedReducer<AppState, StoreAuthStep>(_storeAuthStep),
   TypedReducer<AppState, StoreAuthToken>(_storeAuthToken),
   TypedReducer<AppState, StoreProfile>(_storeProfile),
-  // ...userReducers,
+  TypedReducer<AppState, SignOut>(_signOut),
 ]);
 
 AppState _addProblem(AppState state, AddProblem action) {
@@ -31,4 +32,8 @@ AppState _storeAuthToken(AppState state, StoreAuthToken action) {
 
 AppState _storeProfile(AppState state, StoreProfile action) {
   return state.rebuild((b) => b..profile.replace(action.profile));
+}
+
+AppState _signOut(AppState state, SignOut action) {
+  return state.rebuild((b) => b..profile = null);
 }
