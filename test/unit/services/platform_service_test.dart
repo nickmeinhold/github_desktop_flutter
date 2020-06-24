@@ -5,14 +5,16 @@ import 'package:test/test.dart';
 void main() {
   group('Local Storage Service', () {
     test('stores the auth token', () async {
-      SharedPreferences.setMockInitialValues({'token': 'token'});
+      SharedPreferences.setMockInitialValues(
+          <String, dynamic>{'token': 'token'});
       final service = PlatformService();
       final result = await service.store(token: 'token');
       expect(result, true);
     });
 
     test('retrieves the auth token', () async {
-      SharedPreferences.setMockInitialValues({'token': 'token'});
+      SharedPreferences.setMockInitialValues(
+          <String, dynamic>{'token': 'token'});
       final service = PlatformService();
       final result = await service.retrieveToken();
       expect(result, 'token');

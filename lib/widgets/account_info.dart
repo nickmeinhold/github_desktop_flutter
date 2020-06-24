@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:github_desktop_flutter/models/profile.dart';
+import 'package:github_desktop_flutter/models/profile/profile.dart';
 import 'package:redux/redux.dart';
-import 'package:github_desktop_flutter/models/app_state.dart';
+import 'package:github_desktop_flutter/models/app/app_state.dart';
 import 'package:github_desktop_flutter/widgets/account_avatar.dart';
 
 class AccountInfo extends StatelessWidget {

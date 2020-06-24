@@ -6,29 +6,7 @@ part of problem;
 // BuiltValueGenerator
 // **************************************************************************
 
-const ProblemTypeEnum _$signin = const ProblemTypeEnum._('signin');
-const ProblemTypeEnum _$checkin = const ProblemTypeEnum._('checkin');
-
-ProblemTypeEnum _$valueOf(String name) {
-  switch (name) {
-    case 'signin':
-      return _$signin;
-    case 'checkin':
-      return _$checkin;
-    default:
-      throw new ArgumentError(name);
-  }
-}
-
-final BuiltSet<ProblemTypeEnum> _$values =
-    new BuiltSet<ProblemTypeEnum>(const <ProblemTypeEnum>[
-  _$signin,
-  _$checkin,
-]);
-
 Serializer<Problem> _$problemSerializer = new _$ProblemSerializer();
-Serializer<ProblemTypeEnum> _$problemTypeEnumSerializer =
-    new _$ProblemTypeEnumSerializer();
 
 class _$ProblemSerializer implements StructuredSerializer<Problem> {
   @override
@@ -42,7 +20,7 @@ class _$ProblemSerializer implements StructuredSerializer<Problem> {
     final result = <Object>[
       'type',
       serializers.serialize(object.type,
-          specifiedType: const FullType(ProblemTypeEnum)),
+          specifiedType: const FullType(ProblemType)),
       'message',
       serializers.serialize(object.message,
           specifiedType: const FullType(String)),
@@ -63,8 +41,8 @@ class _$ProblemSerializer implements StructuredSerializer<Problem> {
       result
         ..add('info')
         ..add(serializers.serialize(object.info,
-            specifiedType: const FullType(
-                Map, const [const FullType(String), const FullType(dynamic)])));
+            specifiedType: const FullType(BuiltMap,
+                const [const FullType(String), const FullType(Object)])));
     }
     return result;
   }
@@ -82,8 +60,7 @@ class _$ProblemSerializer implements StructuredSerializer<Problem> {
       switch (key) {
         case 'type':
           result.type = serializers.deserialize(value,
-                  specifiedType: const FullType(ProblemTypeEnum))
-              as ProblemTypeEnum;
+              specifiedType: const FullType(ProblemType)) as ProblemType;
           break;
         case 'message':
           result.message = serializers.deserialize(value,
@@ -98,11 +75,9 @@ class _$ProblemSerializer implements StructuredSerializer<Problem> {
               specifiedType: const FullType(AppState)) as AppState);
           break;
         case 'info':
-          result.info = serializers.deserialize(value,
-              specifiedType: const FullType(Map, const [
-                const FullType(String),
-                const FullType(dynamic)
-              ])) as Map<String, dynamic>;
+          result.info.replace(serializers.deserialize(value,
+              specifiedType: const FullType(BuiltMap,
+                  const [const FullType(String), const FullType(Object)])));
           break;
       }
     }
@@ -111,27 +86,9 @@ class _$ProblemSerializer implements StructuredSerializer<Problem> {
   }
 }
 
-class _$ProblemTypeEnumSerializer
-    implements PrimitiveSerializer<ProblemTypeEnum> {
-  @override
-  final Iterable<Type> types = const <Type>[ProblemTypeEnum];
-  @override
-  final String wireName = 'ProblemTypeEnum';
-
-  @override
-  Object serialize(Serializers serializers, ProblemTypeEnum object,
-          {FullType specifiedType = FullType.unspecified}) =>
-      object.name;
-
-  @override
-  ProblemTypeEnum deserialize(Serializers serializers, Object serialized,
-          {FullType specifiedType = FullType.unspecified}) =>
-      ProblemTypeEnum.valueOf(serialized as String);
-}
-
 class _$Problem extends Problem {
   @override
-  final ProblemTypeEnum type;
+  final ProblemType type;
   @override
   final String message;
   @override
@@ -139,7 +96,7 @@ class _$Problem extends Problem {
   @override
   final AppState state;
   @override
-  final Map<String, dynamic> info;
+  final BuiltMap<String, Object> info;
 
   factory _$Problem([void Function(ProblemBuilder) updates]) =>
       (new ProblemBuilder()..update(updates)).build();
@@ -195,9 +152,9 @@ class _$Problem extends Problem {
 class ProblemBuilder implements Builder<Problem, ProblemBuilder> {
   _$Problem _$v;
 
-  ProblemTypeEnum _type;
-  ProblemTypeEnum get type => _$this._type;
-  set type(ProblemTypeEnum type) => _$this._type = type;
+  ProblemType _type;
+  ProblemType get type => _$this._type;
+  set type(ProblemType type) => _$this._type = type;
 
   String _message;
   String get message => _$this._message;
@@ -211,9 +168,10 @@ class ProblemBuilder implements Builder<Problem, ProblemBuilder> {
   AppStateBuilder get state => _$this._state ??= new AppStateBuilder();
   set state(AppStateBuilder state) => _$this._state = state;
 
-  Map<String, dynamic> _info;
-  Map<String, dynamic> get info => _$this._info;
-  set info(Map<String, dynamic> info) => _$this._info = info;
+  MapBuilder<String, Object> _info;
+  MapBuilder<String, Object> get info =>
+      _$this._info ??= new MapBuilder<String, Object>();
+  set info(MapBuilder<String, Object> info) => _$this._info = info;
 
   ProblemBuilder();
 
@@ -223,7 +181,7 @@ class ProblemBuilder implements Builder<Problem, ProblemBuilder> {
       _message = _$v.message;
       _trace = _$v.trace;
       _state = _$v.state?.toBuilder();
-      _info = _$v.info;
+      _info = _$v.info?.toBuilder();
       _$v = null;
     }
     return this;
@@ -252,12 +210,14 @@ class ProblemBuilder implements Builder<Problem, ProblemBuilder> {
               message: message,
               trace: trace,
               state: _state?.build(),
-              info: info);
+              info: _info?.build());
     } catch (_) {
       String _$failedField;
       try {
         _$failedField = 'state';
         _state?.build();
+        _$failedField = 'info';
+        _info?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'Problem', _$failedField, e.toString());

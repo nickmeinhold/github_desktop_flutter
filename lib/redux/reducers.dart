@@ -1,8 +1,9 @@
+import 'package:github_desktop_flutter/actions/auth/store_auth_step.dart';
+import 'package:github_desktop_flutter/actions/auth/store_auth_token.dart';
+import 'package:github_desktop_flutter/actions/problems/add_problem.dart';
+import 'package:github_desktop_flutter/actions/profile/store_profile.dart';
 import 'package:redux/redux.dart';
-import 'package:github_desktop_flutter/models/actions.dart';
-import 'package:github_desktop_flutter/models/app_state.dart';
-
-import '../models/actions.dart';
+import 'package:github_desktop_flutter/models/app/app_state.dart';
 
 /// Reducers specify how the application"s state changes in response to actions
 /// sent to the store.
@@ -13,8 +14,6 @@ final appReducer = combineReducers<AppState>([
   TypedReducer<AppState, StoreAuthStep>(_storeAuthStep),
   TypedReducer<AppState, StoreAuthToken>(_storeAuthToken),
   TypedReducer<AppState, StoreProfile>(_storeProfile),
-  TypedReducer<AppState, UpdatePassword>(_updatePassword),
-  TypedReducer<AppState, UpdateUsername>(_updateUsername),
   // ...userReducers,
 ]);
 
@@ -32,12 +31,4 @@ AppState _storeAuthToken(AppState state, StoreAuthToken action) {
 
 AppState _storeProfile(AppState state, StoreProfile action) {
   return state.rebuild((b) => b..profile.replace(action.profile));
-}
-
-AppState _updateUsername(AppState state, UpdateUsername action) {
-  return state.rebuild((b) => b..username = (action.text));
-}
-
-AppState _updatePassword(AppState state, UpdatePassword action) {
-  return state.rebuild((b) => b..password = (action.text));
 }

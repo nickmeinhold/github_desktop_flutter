@@ -1,6 +1,8 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
-import 'package:github_desktop_flutter/models/app_state.dart';
-import 'package:github_desktop_flutter/models/problem.dart';
+import 'package:github_desktop_flutter/enums/problem_type.dart';
+import 'package:github_desktop_flutter/models/app/app_state.dart';
+import 'package:github_desktop_flutter/models/app/problem.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -12,8 +14,8 @@ void main() {
 
       final problem = Problem((a) => a
         ..message = 'message'
-        ..type = ProblemTypeEnum.checkin
-        ..info = {'test': 'test'}
+        ..type = ProblemType.signIn
+        ..info = MapBuilder({'test': 'test'})
         ..state.replace(AppState.init())
         ..trace = trace.toString());
 
@@ -21,7 +23,7 @@ void main() {
       expect(problem.info, {'test': 'test'});
       expect(problem.state, AppState.init());
       expect(problem.trace, trace.toString());
-      expect(problem.type, ProblemTypeEnum.checkin);
+      expect(problem.type, ProblemType.signIn);
       expect(problem.message, 'message');
     });
 
@@ -30,13 +32,13 @@ void main() {
       // trace, state and info are nullable
       final problem = Problem((a) => a
         ..message = 'message'
-        ..type = ProblemTypeEnum.checkin);
+        ..type = ProblemType.signIn);
 
       // so the members should be:
       expect(problem.info, null);
       expect(problem.state, null);
       expect(problem.trace, null);
-      expect(problem.type, ProblemTypeEnum.checkin);
+      expect(problem.type, ProblemType.signIn);
       expect(problem.message, 'message');
     });
 
@@ -49,17 +51,17 @@ void main() {
           throwsA(const TypeMatcher<BuiltValueNullFieldError>()));
 
       // and no message should also throw
-      expect(() => Problem((a) => a..type = ProblemTypeEnum.checkin),
+      expect(() => Problem((a) => a..type = ProblemType.signIn),
           throwsA(const TypeMatcher<BuiltValueNullFieldError>()));
 
       // whereas missing trace, state or info should be fine
       expect(
           Problem((a) => a
             ..message = 'message'
-            ..type = ProblemTypeEnum.checkin),
+            ..type = ProblemType.signIn),
           equals(Problem((a) => a
             ..message = 'message'
-            ..type = ProblemTypeEnum.checkin)));
+            ..type = ProblemType.signIn)));
     });
   });
 }

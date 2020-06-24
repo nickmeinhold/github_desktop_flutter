@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:github_desktop_flutter/models/profile.dart';
+import 'package:github_desktop_flutter/models/profile/profile.dart';
 
 class AccountAvatar extends StatelessWidget {
   final Profile profile;

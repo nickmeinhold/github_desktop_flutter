@@ -1,4 +1,4 @@
-import 'package:github_desktop_flutter/models/profile.dart';
+import 'package:github_desktop_flutter/models/profile/profile.dart';
 import 'package:test/test.dart';
 
 void main() {

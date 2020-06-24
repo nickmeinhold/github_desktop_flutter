@@ -5,11 +5,11 @@ import 'package:github_desktop_flutter/services/github_service.dart';
 import 'package:github_desktop_flutter/services/platform_service.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_remote_devtools/redux_remote_devtools.dart';
-import 'package:github_desktop_flutter/redux/middleware.dart';
+import 'package:github_desktop_flutter/middleware/middleware.dart';
 import 'package:github_desktop_flutter/redux/reducers.dart';
 import 'package:github_desktop_flutter/widgets/app.dart';
 
-import 'models/app_state.dart';
+import 'models/app/app_state.dart';
 
 void main() async {
   final remoteDevtools = RemoteDevToolsMiddleware('localhost:8000');
