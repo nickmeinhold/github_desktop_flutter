@@ -6,12 +6,15 @@ part of 'auth_step.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
+const AuthStep _$checking = const AuthStep._('checking');
 const AuthStep _$waitingForInput = const AuthStep._('waitingForInput');
 const AuthStep _$signingIn = const AuthStep._('signingIn');
 const AuthStep _$authenticating = const AuthStep._('authenticating');
 
 AuthStep _$valueOf(String name) {
   switch (name) {
+    case 'checking':
+      return _$checking;
     case 'waitingForInput':
       return _$waitingForInput;
     case 'signingIn':
@@ -24,6 +27,7 @@ AuthStep _$valueOf(String name) {
 }
 
 final BuiltSet<AuthStep> _$values = new BuiltSet<AuthStep>(const <AuthStep>[
+  _$checking,
   _$waitingForInput,
   _$signingIn,
   _$authenticating,

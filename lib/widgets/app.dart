@@ -6,7 +6,7 @@ import 'package:github_desktop_flutter/actions/auth/observe_auth_state.dart';
 import 'package:github_desktop_flutter/middleware/middleware.dart';
 import 'package:github_desktop_flutter/models/app/app_state.dart';
 import 'package:github_desktop_flutter/models/profile/profile.dart';
-import 'package:github_desktop_flutter/redux/reducers.dart';
+import 'package:github_desktop_flutter/reducers/reducers.dart';
 import 'package:github_desktop_flutter/services/github_service.dart';
 import 'package:github_desktop_flutter/services/platform_service.dart';
 import 'package:github_desktop_flutter/widgets/auth_page.dart';

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:github_desktop_flutter/reducers/reducers.dart';
 import 'package:redux/redux.dart';
 import 'package:github_desktop_flutter/models/app/app_state.dart';
-import 'package:github_desktop_flutter/redux/reducers.dart';
 import 'package:github_desktop_flutter/widgets/more_options_page.dart';
 
 void main() {

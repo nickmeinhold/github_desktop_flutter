@@ -8,12 +8,15 @@ part 'auth_step.g.dart';
 
 class AuthStep extends EnumClass {
   static Serializer<AuthStep> get serializer => _$authStepSerializer;
+  static const AuthStep checking = _$checking;
   static const AuthStep waitingForInput = _$waitingForInput;
   static const AuthStep signingIn = _$signingIn;
   static const AuthStep authenticating = _$authenticating;
   static const Map<AuthStep, int> _$indexMap = {
-    waitingForInput: 0,
-    signingIn: 1
+    checking: 0,
+    waitingForInput: 1,
+    signingIn: 2,
+    authenticating: 3
   };
 
   const AuthStep._(String name) : super(name);

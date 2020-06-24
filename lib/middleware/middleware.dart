@@ -1,5 +1,6 @@
 import 'package:github_desktop_flutter/actions/auth/check_for_auth_token.dart';
 import 'package:github_desktop_flutter/actions/auth/launch_auth_page.dart';
+import 'package:github_desktop_flutter/actions/auth/sign_out.dart';
 import 'package:github_desktop_flutter/actions/auth/store_auth_step.dart';
 import 'package:github_desktop_flutter/actions/auth/store_auth_token.dart';
 import 'package:github_desktop_flutter/actions/problems/add_problem.dart';
@@ -32,6 +33,9 @@ List<Middleware<AppState>> createMiddleware(
     ),
     TypedMiddleware<AppState, CheckForAuthToken>(
       _checkForAuthToken(platformService),
+    ),
+    TypedMiddleware<AppState, SignOut>(
+      _signOut(platformService),
     ),
   ];
 }
@@ -103,6 +107,24 @@ void Function(
           message: error.toString(),
           type: ProblemType.signIn,
           traceString: trace.toString()));
+    }
+  };
+}
+
+void Function(Store<AppState> store, SignOut action, NextDispatcher next)
+    _signOut(PlatformService platformService) {
+  return (Store<AppState> store, SignOut action, NextDispatcher next) async {
+    next(action);
+
+    try {
+      // save null to shared_preferences
+      await platformService.store(token: null);
+    } on Exception catch (error, trace) {
+      store.dispatch(AddProblem.from(
+        message: error.toString(),
+        type: ProblemType.signIn,
+        traceString: trace.toString(),
+      ));
     }
   };
 }
