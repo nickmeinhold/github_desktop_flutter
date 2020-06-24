@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart' hide Action;
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:github/github.dart';
 import 'package:github_desktop_flutter/models/profile.dart';
 import 'package:github_desktop_flutter/services/github_service.dart';
 import 'package:github_desktop_flutter/services/platform_service.dart';
@@ -34,7 +35,7 @@ class _GDFAppState extends State<GDFApp> {
           middleware: [
             ...createMiddleware(
               PlatformService(),
-              GitHubService(Dio()),
+              GitHubService(Dio(), GitHub()),
             ),
           ],
         );
@@ -53,7 +54,7 @@ class _GDFAppState extends State<GDFApp> {
           builder: (context, profile) {
             return (profile == null || profile.id == null)
                 ? AuthPage()
-                : MainPage();
+                : AuthPage();
           },
         ),
       ),

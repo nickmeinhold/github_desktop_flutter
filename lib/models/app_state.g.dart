@@ -26,6 +26,18 @@ class _$AppStateSerializer implements StructuredSerializer<AppState> {
           specifiedType:
               const FullType(BuiltList, const [const FullType(Problem)])),
     ];
+    if (object.username != null) {
+      result
+        ..add('username')
+        ..add(serializers.serialize(object.username,
+            specifiedType: const FullType(String)));
+    }
+    if (object.password != null) {
+      result
+        ..add('password')
+        ..add(serializers.serialize(object.password,
+            specifiedType: const FullType(String)));
+    }
     if (object.authToken != null) {
       result
         ..add('authToken')
@@ -56,6 +68,14 @@ class _$AppStateSerializer implements StructuredSerializer<AppState> {
           result.authStep = serializers.deserialize(value,
               specifiedType: const FullType(int)) as int;
           break;
+        case 'username':
+          result.username = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'password':
+          result.password = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
         case 'authToken':
           result.authToken = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
@@ -68,7 +88,7 @@ class _$AppStateSerializer implements StructuredSerializer<AppState> {
           result.problems.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
                       BuiltList, const [const FullType(Problem)]))
-              as BuiltList<dynamic>);
+              as BuiltList<Object>);
           break;
       }
     }
@@ -81,6 +101,10 @@ class _$AppState extends AppState {
   @override
   final int authStep;
   @override
+  final String username;
+  @override
+  final String password;
+  @override
   final String authToken;
   @override
   final Profile profile;
@@ -90,7 +114,13 @@ class _$AppState extends AppState {
   factory _$AppState([void Function(AppStateBuilder) updates]) =>
       (new AppStateBuilder()..update(updates)).build();
 
-  _$AppState._({this.authStep, this.authToken, this.profile, this.problems})
+  _$AppState._(
+      {this.authStep,
+      this.username,
+      this.password,
+      this.authToken,
+      this.profile,
+      this.problems})
       : super._() {
     if (authStep == null) {
       throw new BuiltValueNullFieldError('AppState', 'authStep');
@@ -112,6 +142,8 @@ class _$AppState extends AppState {
     if (identical(other, this)) return true;
     return other is AppState &&
         authStep == other.authStep &&
+        username == other.username &&
+        password == other.password &&
         authToken == other.authToken &&
         profile == other.profile &&
         problems == other.problems;
@@ -120,7 +152,11 @@ class _$AppState extends AppState {
   @override
   int get hashCode {
     return $jf($jc(
-        $jc($jc($jc(0, authStep.hashCode), authToken.hashCode),
+        $jc(
+            $jc(
+                $jc($jc($jc(0, authStep.hashCode), username.hashCode),
+                    password.hashCode),
+                authToken.hashCode),
             profile.hashCode),
         problems.hashCode));
   }
@@ -129,6 +165,8 @@ class _$AppState extends AppState {
   String toString() {
     return (newBuiltValueToStringHelper('AppState')
           ..add('authStep', authStep)
+          ..add('username', username)
+          ..add('password', password)
           ..add('authToken', authToken)
           ..add('profile', profile)
           ..add('problems', problems))
@@ -142,6 +180,14 @@ class AppStateBuilder implements Builder<AppState, AppStateBuilder> {
   int _authStep;
   int get authStep => _$this._authStep;
   set authStep(int authStep) => _$this._authStep = authStep;
+
+  String _username;
+  String get username => _$this._username;
+  set username(String username) => _$this._username = username;
+
+  String _password;
+  String get password => _$this._password;
+  set password(String password) => _$this._password = password;
 
   String _authToken;
   String get authToken => _$this._authToken;
@@ -161,6 +207,8 @@ class AppStateBuilder implements Builder<AppState, AppStateBuilder> {
   AppStateBuilder get _$this {
     if (_$v != null) {
       _authStep = _$v.authStep;
+      _username = _$v.username;
+      _password = _$v.password;
       _authToken = _$v.authToken;
       _profile = _$v.profile?.toBuilder();
       _problems = _$v.problems?.toBuilder();
@@ -189,6 +237,8 @@ class AppStateBuilder implements Builder<AppState, AppStateBuilder> {
       _$result = _$v ??
           new _$AppState._(
               authStep: authStep,
+              username: username,
+              password: password,
               authToken: authToken,
               profile: _profile?.build(),
               problems: problems.build());

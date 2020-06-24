@@ -21,28 +21,44 @@ class _AuthPageState extends State<AuthPage> {
               alignment: Alignment.center,
               index: authStep,
               children: <Widget>[
+                // Column(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: <Widget>[
+                //       CircularProgressIndicator(),
+                //       Text('Checking for auth token...')
+                //     ]),
                 Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      CircularProgressIndicator(),
-                      Text('Checking for auth token...')
-                    ]),
-                RaisedButton(
-                  child: const Text('SIGN IN'),
-                  onPressed: () {
-                    StoreProvider.of<AppState>(context)
-                        .dispatch(Action.LaunchAuthPage());
-                    StoreProvider.of<AppState>(context)
-                        .dispatch(Action.StoreAuthStep(step: 2));
-                  },
-                ),
-                TokenEntry(),
-                Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      CircularProgressIndicator(),
-                      Text('Retrieving Profile...')
-                    ]),
+                  children: [
+                    TextField(
+                      onChanged: (text) => StoreProvider.of<AppState>(context)
+                          .dispatch(UpdateUsername(text: text)),
+                    ),
+                    TextField(
+                      obscureText: true,
+                      onChanged: (text) => StoreProvider.of<AppState>(context)
+                          .dispatch(UpdatePassword(text: text)),
+                    ),
+                    RaisedButton(
+                      child: const Text('SIGN IN'),
+                      onPressed: () {
+                        StoreProvider.of<AppState>(context)
+                            .dispatch(SignInBasic());
+                        // StoreProvider.of<AppState>(context)
+                        //     .dispatch(Action.LaunchAuthPage());
+                        // StoreProvider.of<AppState>(context)
+                        //     .dispatch(Action.StoreAuthStep(step: 2));
+                      },
+                    ),
+                  ],
+                )
+
+                // TokenEntry(),
+                // Column(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: <Widget>[
+                //       CircularProgressIndicator(),
+                //       Text('Retrieving Profile...')
+                //     ]),
               ],
             ),
           );

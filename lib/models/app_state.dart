@@ -16,6 +16,11 @@ abstract class AppState implements Built<AppState, AppStateBuilder> {
   int get authStep;
 
   @nullable
+  String get username;
+  @nullable
+  String get password;
+
+  @nullable
   String get authToken;
   @nullable
   Profile get profile;

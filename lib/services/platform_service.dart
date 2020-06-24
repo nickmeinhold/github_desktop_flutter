@@ -14,12 +14,12 @@ class PlatformService {
   }
 
   Future<bool> store({@required String token}) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
     return prefs.setString('token', token);
   }
 
   Future<String> retrieveToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
     return prefs.getString('token');
   }
 }

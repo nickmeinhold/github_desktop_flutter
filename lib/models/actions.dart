@@ -65,3 +65,17 @@ class LaunchAuthPage extends Action {
 class CheckForAuthToken extends Action {
   CheckForAuthToken() : super(<String, Object>{});
 }
+
+class UpdateUsername extends Action {
+  UpdateUsername({@required this.text}) : super(<String, Object>{'text': text});
+  final String text;
+}
+
+class UpdatePassword extends Action {
+  UpdatePassword({@required this.text}) : super(<String, Object>{'text': text});
+  final String text;
+}
+
+class SignInBasic extends Action {
+  SignInBasic() : super(<String, Object>{});
+}
