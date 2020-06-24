@@ -1,6 +1,9 @@
-import 'package:github_desktop_flutter/models/app_state.dart';
-import 'package:github_desktop_flutter/models/problem.dart';
-import 'package:github_desktop_flutter/models/profile.dart';
+import 'package:built_collection/built_collection.dart';
+import 'package:github_desktop_flutter/enums/auth_step.dart';
+import 'package:github_desktop_flutter/enums/problem_type.dart';
+import 'package:github_desktop_flutter/models/app/app_state.dart';
+import 'package:github_desktop_flutter/models/app/problem.dart';
+import 'package:github_desktop_flutter/models/profile/profile.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -20,12 +23,12 @@ void main() {
 
   group('ApState', () {
     test('deals with null for nullable members', () {
-      final appState = AppState((b) => b..authStep = 0);
+      final appState = AppState((b) => b..authStep = AuthStep.waitingForInput);
 
       expect(appState.authStep, 0);
       expect(appState.authToken, null);
       expect(appState.profile, null);
-      expect(appState.problems, []);
+      expect(appState.problems, <Problem>[]);
     });
 
     test('members take expected values', () {
@@ -39,13 +42,13 @@ void main() {
 
       final problem = Problem((a) => a
         ..message = 'message'
-        ..type = ProblemTypeEnum.checkin
-        ..info = {'test': 'test'}
+        ..type = ProblemType.signIn
+        ..info = MapBuilder({'test': 'test'})
         ..state.replace(AppState.init())
         ..trace = StackTrace.current.toString());
 
       final appState = AppState((b) => b
-        ..authStep = 0
+        ..authStep = AuthStep.waitingForInput
         ..authToken = 'token'
         ..problems.add(problem)
         ..profile.replace(profile));

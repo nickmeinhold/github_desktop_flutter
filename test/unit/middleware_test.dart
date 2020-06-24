@@ -1,6 +1,7 @@
-import 'package:github_desktop_flutter/models/actions.dart';
-import 'package:github_desktop_flutter/models/app_state.dart';
-import 'package:github_desktop_flutter/redux/middleware.dart';
+import 'package:github_desktop_flutter/actions/auth/launch_auth_page.dart';
+import 'package:github_desktop_flutter/actions/auth/store_auth_token.dart';
+import 'package:github_desktop_flutter/models/app/app_state.dart';
+import 'package:github_desktop_flutter/middleware/middleware.dart';
 import 'package:github_desktop_flutter/redux/reducers.dart';
 import 'package:github_desktop_flutter/services/github_service.dart';
 import 'package:mockito/mockito.dart';
@@ -28,7 +29,7 @@ void main() {
       );
 
       // dispatch action to observe the auth state
-      await store.dispatch(Action.StoreAuthToken(token: 'token'));
+      await store.dispatch(StoreAuthToken((b) => b..token = 'token'));
 
       // check that the token was stored in local storage
       final retrievedToken = await fakePlatformService.retrieveToken();
@@ -49,7 +50,7 @@ void main() {
       );
 
       // dispatch action to launch the auth page
-      await store.dispatch(Action.LaunchAuthPage());
+      await store.dispatch(LaunchAuthPage());
 
       // TODO: check that the service got the expected url string
     });

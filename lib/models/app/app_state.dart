@@ -5,21 +5,16 @@ import 'dart:convert';
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'package:github_desktop_flutter/models/problem.dart';
-import 'package:github_desktop_flutter/models/profile.dart';
-import 'package:github_desktop_flutter/models/serializers.dart';
+import 'package:github_desktop_flutter/enums/auth_step.dart';
+import 'package:github_desktop_flutter/models/app/problem.dart';
+import 'package:github_desktop_flutter/models/profile/profile.dart';
+import 'package:github_desktop_flutter/models/app/serializers.dart';
 
 part 'app_state.g.dart';
 
 abstract class AppState implements Built<AppState, AppStateBuilder> {
   // non-nullable
-  int get authStep;
-
-  @nullable
-  String get username;
-  @nullable
-  String get password;
-
+  AuthStep get authStep;
   @nullable
   String get authToken;
   @nullable
@@ -32,7 +27,7 @@ abstract class AppState implements Built<AppState, AppStateBuilder> {
 
   factory AppState.init() => AppState((a) => a
     ..problems = ListBuilder<Problem>()
-    ..authStep = 0);
+    ..authStep = AuthStep.waitingForInput);
 
   factory AppState([void Function(AppStateBuilder) updates]) = _$AppState;
 

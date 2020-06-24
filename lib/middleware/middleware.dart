@@ -1,14 +1,16 @@
-import 'package:github_desktop_flutter/models/actions.dart';
-import 'package:github_desktop_flutter/models/problem.dart';
-import 'package:github_desktop_flutter/models/profile.dart';
+import 'package:github_desktop_flutter/actions/auth/check_for_auth_token.dart';
+import 'package:github_desktop_flutter/actions/auth/launch_auth_page.dart';
+import 'package:github_desktop_flutter/actions/auth/store_auth_step.dart';
+import 'package:github_desktop_flutter/actions/auth/store_auth_token.dart';
+import 'package:github_desktop_flutter/actions/problems/add_problem.dart';
+import 'package:github_desktop_flutter/actions/profile/store_profile.dart';
+import 'package:github_desktop_flutter/enums/auth_step.dart';
+import 'package:github_desktop_flutter/enums/problem_type.dart';
+import 'package:github_desktop_flutter/models/app/app_state.dart';
+import 'package:github_desktop_flutter/models/app/problem.dart';
 import 'package:github_desktop_flutter/services/github_service.dart';
 import 'package:github_desktop_flutter/services/platform_service.dart';
 import 'package:redux/redux.dart';
-import 'package:github_desktop_flutter/models/app_state.dart';
-
-import '../models/actions.dart';
-import '../models/actions.dart';
-import '../models/actions.dart';
 
 /// Middleware is used for a variety of things:
 /// - Logging
@@ -31,9 +33,6 @@ List<Middleware<AppState>> createMiddleware(
     TypedMiddleware<AppState, CheckForAuthToken>(
       _checkForAuthToken(platformService),
     ),
-    TypedMiddleware<AppState, SignInBasic>(
-      _signInBasic(githubService),
-    ),
   ];
 }
 
@@ -49,15 +48,14 @@ void Function(Store<AppState> store, StoreAuthToken action, NextDispatcher next)
       await platformService.store(token: store.state.authToken);
 
       // retrieve and store profile
-      Profile profile =
+      final profile =
           await githubService.retrieveProfile(store.state.authToken);
-      store.dispatch(StoreProfile(profile: profile));
+      store.dispatch(StoreProfile((b) => b..profile.replace(profile)));
     } on Exception catch (error, trace) {
-      store.dispatch(AddProblem(
-        problem: Problem((b) => b
-          ..type = ProblemTypeEnum.signin
-          ..message = error.toString()
-          ..trace = trace.toString()),
+      store.dispatch(AddProblem.from(
+        message: error.toString(),
+        type: ProblemType.signIn,
+        traceString: trace.toString(),
       ));
     }
   };
@@ -69,18 +67,19 @@ void Function(Store<AppState> store, LaunchAuthPage action, NextDispatcher next)
       NextDispatcher next) async {
     next(action);
 
-    final url = 'https://github.com/login/oauth/authorize' +
-        '?client_id=987bd965a05598c5e090' +
+    final url = 'https://github.com/login/oauth/authorize'
+        '?client_id=987bd965a05598c5e090'
         '&scope=public_repo%20read:user%20user:email';
 
     try {
       platformService.launch(url: url);
     } catch (error, trace) {
       store.dispatch(AddProblem(
-        problem: Problem((b) => b
-          ..type = ProblemTypeEnum.signin
-          ..message = error.toString()
-          ..trace = trace.toString()),
+        (b) => b
+          ..problem.replace(Problem((b) => b
+            ..type = ProblemType.signIn
+            ..message = error.toString()
+            ..trace = trace.toString())),
       ));
     }
   };
@@ -96,38 +95,14 @@ void Function(
     try {
       final token = await platformService.retrieveToken();
       if (token != null) {
-        store.dispatch(StoreAuthToken(token: token));
-      } else {
-        store.dispatch(StoreAuthStep(step: 1));
+        store.dispatch(StoreAuthToken((b) => b..token = token));
       }
+      store.dispatch(StoreAuthStep((b) => b..step = AuthStep.waitingForInput));
     } catch (error, trace) {
-      store.dispatch(AddProblem(
-        problem: Problem((b) => b
-          ..type = ProblemTypeEnum.signin
-          ..message = error.toString()
-          ..trace = trace.toString()),
-      ));
-    }
-  };
-}
-
-void Function(Store<AppState> store, SignInBasic action, NextDispatcher next)
-    _signInBasic(GitHubService githubService) {
-  return (Store<AppState> store, SignInBasic action,
-      NextDispatcher next) async {
-    next(action);
-
-    try {
-      final token = githubService.addBasicCredentials(
-          store.state.username, store.state.password);
-      final response = await githubService.call();
-    } catch (error, trace) {
-      store.dispatch(AddProblem(
-        problem: Problem((b) => b
-          ..type = ProblemTypeEnum.signin
-          ..message = error.toString()
-          ..trace = trace.toString()),
-      ));
+      store.dispatch(AddProblem.from(
+          message: error.toString(),
+          type: ProblemType.signIn,
+          traceString: trace.toString()));
     }
   };
 }

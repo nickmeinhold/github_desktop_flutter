@@ -1,8 +1,13 @@
-import 'package:github_desktop_flutter/models/profile.dart';
+import 'package:built_collection/built_collection.dart';
+import 'package:github_desktop_flutter/actions/auth/store_auth_step.dart';
+import 'package:github_desktop_flutter/actions/auth/store_auth_token.dart';
+import 'package:github_desktop_flutter/actions/problems/add_problem.dart';
+import 'package:github_desktop_flutter/actions/profile/store_profile.dart';
+import 'package:github_desktop_flutter/enums/auth_step.dart';
+import 'package:github_desktop_flutter/enums/problem_type.dart';
+import 'package:github_desktop_flutter/models/profile/profile.dart';
 import 'package:redux/redux.dart';
-import 'package:github_desktop_flutter/models/actions.dart';
-import 'package:github_desktop_flutter/models/app_state.dart';
-import 'package:github_desktop_flutter/models/problem.dart';
+import 'package:github_desktop_flutter/models/app/app_state.dart';
 import 'package:github_desktop_flutter/redux/reducers.dart';
 import 'package:test/test.dart';
 
@@ -16,14 +21,13 @@ void main() {
       );
 
       // dispatch action to store auth state
-      store.dispatch(Action.StoreProfile(
-          profile: Profile((b) => b
-            ..id = 1
-            ..login = 'login'
-            ..name = 'name'
-            ..email = 'email'
-            ..avatarUrl = 'url'
-            ..location = 'location')));
+      store.dispatch(StoreProfile((b) => b
+        ..profile.id = 1
+        ..profile.login = 'login'
+        ..profile.name = 'name'
+        ..profile.email = 'email'
+        ..profile.avatarUrl = 'url'
+        ..profile.location = 'location'));
 
       // check that the store has the expected value
       expect(store.state.profile.id, equals(1));
@@ -42,13 +46,12 @@ void main() {
       );
 
       // dispatch action to add a problem
-      store.dispatch(Action.AddProblem(
-          problem: Problem((b) => b
-            ..message = 'm'
-            ..info = {'a': 'b'}
-            ..state.replace(AppState.init())
-            ..trace = 'trace'
-            ..type = ProblemTypeEnum.signin)));
+      store.dispatch(AddProblem((b) => b
+        ..problem.message = 'm'
+        ..problem.info = MapBuilder({'a': 'b'})
+        ..problem.state.replace(AppState.init())
+        ..problem.trace = 'trace'
+        ..problem.type = ProblemType.signIn));
 
       // check that the store has the expected value
       expect(store.state.problems.length, 1);
@@ -57,7 +60,7 @@ void main() {
       expect(problem.info, {'a': 'b'});
       expect(problem.state, AppState.init());
       expect(problem.trace, 'trace');
-      expect(problem.type, ProblemTypeEnum.signin);
+      expect(problem.type, ProblemType.signIn);
     });
 
     test('_storeAuthStep stores the auth step', () {
@@ -68,7 +71,7 @@ void main() {
       );
 
       // dispatch action to store auth step
-      store.dispatch(Action.StoreAuthStep(step: 1));
+      store.dispatch(StoreAuthStep((b) => b..step = AuthStep.waitingForInput));
 
       // check that the store has the expected value
       expect(store.state.authStep, 1);
@@ -82,7 +85,7 @@ void main() {
       );
 
       // dispatch action to store auth token
-      store.dispatch(Action.StoreAuthToken(token: 'token'));
+      store.dispatch(StoreAuthToken((b) => b..token = 'token'));
 
       // check that the store has the expected value
       expect(store.state.authToken, 'token');
@@ -104,7 +107,7 @@ void main() {
         ..location = 'Melbourne');
 
       // dispatch action to store profile
-      store.dispatch(Action.StoreProfile(profile: profile));
+      store.dispatch(StoreProfile((b) => b..profile.replace(profile)));
 
       // check that the store has the expected value
       expect(store.state.profile, profile);

@@ -2,16 +2,16 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart' hide Action;
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:github/github.dart';
-import 'package:github_desktop_flutter/models/profile.dart';
+import 'package:github_desktop_flutter/actions/auth/observe_auth_state.dart';
+import 'package:github_desktop_flutter/middleware/middleware.dart';
+import 'package:github_desktop_flutter/models/app/app_state.dart';
+import 'package:github_desktop_flutter/models/profile/profile.dart';
+import 'package:github_desktop_flutter/redux/reducers.dart';
 import 'package:github_desktop_flutter/services/github_service.dart';
 import 'package:github_desktop_flutter/services/platform_service.dart';
-import 'package:redux/redux.dart';
-import 'package:github_desktop_flutter/models/actions.dart';
-import 'package:github_desktop_flutter/models/app_state.dart';
-import 'package:github_desktop_flutter/redux/middleware.dart';
-import 'package:github_desktop_flutter/redux/reducers.dart';
 import 'package:github_desktop_flutter/widgets/auth_page.dart';
 import 'package:github_desktop_flutter/widgets/main_page.dart';
+import 'package:redux/redux.dart';
 
 class GDFApp extends StatefulWidget {
   GDFApp({this.injectedStore});
@@ -40,7 +40,7 @@ class _GDFAppState extends State<GDFApp> {
           ],
         );
 
-    store.dispatch(Action.ObserveAuthState());
+    store.dispatch(ObserveAuthState());
   }
 
   @override
@@ -54,7 +54,7 @@ class _GDFAppState extends State<GDFApp> {
           builder: (context, profile) {
             return (profile == null || profile.id == null)
                 ? AuthPage()
-                : AuthPage();
+                : MainPage();
           },
         ),
       ),

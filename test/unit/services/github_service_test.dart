@@ -3,12 +3,14 @@ import 'package:test/test.dart';
 
 import '../../data/profile_json.dart';
 import '../../mocks/dio_mocks.dart';
+import '../../mocks/github_mocks.dart';
 
 void main() {
   group('GitHub Service', () {
     test('deserializes json', () async {
       final token = '';
-      final service = GitHubService(DioFake(response: profile_json_data));
+      final service =
+          GitHubService(FakeDio(response: profile_json_data), FakeGitHub());
 
       final profile = await service.retrieveProfile(token);
 

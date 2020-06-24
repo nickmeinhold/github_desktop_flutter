@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:github_desktop_flutter/models/actions.dart';
+import 'package:github_desktop_flutter/actions/auth/store_auth_step.dart';
+import 'package:github_desktop_flutter/enums/auth_step.dart';
 import 'package:redux/redux.dart';
-import 'package:github_desktop_flutter/models/app_state.dart';
+import 'package:github_desktop_flutter/models/app/app_state.dart';
 import 'package:github_desktop_flutter/redux/reducers.dart';
 import 'package:github_desktop_flutter/widgets/auth_page.dart';
 
@@ -38,7 +39,7 @@ void main() {
       // the check for an auth token sets the step
       // we could mock the middleware and add to the store but it's easier to
       // just set the step
-      store.dispatch(StoreAuthStep(step: 1));
+      store.dispatch(StoreAuthStep((b) => b..step = AuthStep.signingIn));
       expect(store.state.authStep, 1);
 
       await tester.pump();

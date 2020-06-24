@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart' hide Action;
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:github_desktop_flutter/models/actions.dart';
-import 'package:github_desktop_flutter/models/app_state.dart';
+import 'package:github_desktop_flutter/actions/auth/check_for_auth_token.dart';
+import 'package:github_desktop_flutter/actions/auth/launch_auth_page.dart';
+import 'package:github_desktop_flutter/actions/auth/store_auth_step.dart';
+import 'package:github_desktop_flutter/actions/auth/store_auth_token.dart';
+import 'package:github_desktop_flutter/enums/auth_step.dart';
+import 'package:github_desktop_flutter/extensions/extensions.dart';
+import 'package:github_desktop_flutter/models/app/app_state.dart';
 
 class AuthPage extends StatefulWidget {
   @override
@@ -11,7 +16,7 @@ class AuthPage extends StatefulWidget {
 class _AuthPageState extends State<AuthPage> {
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, int>(
+    return StoreConnector<AppState, AuthStep>(
         distinct: true,
         onInit: (store) => store.dispatch(CheckForAuthToken()),
         converter: (store) => store.state.authStep,
@@ -19,34 +24,23 @@ class _AuthPageState extends State<AuthPage> {
           return Scaffold(
             body: IndexedStack(
               alignment: Alignment.center,
-              index: authStep,
+              index: authStep.index,
               children: <Widget>[
-                // Column(
-                //     mainAxisAlignment: MainAxisAlignment.center,
-                //     children: <Widget>[
-                //       CircularProgressIndicator(),
-                //       Text('Checking for auth token...')
-                //     ]),
+                Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      CircularProgressIndicator(),
+                      Text('Checking for auth token...')
+                    ]),
                 Column(
                   children: [
-                    TextField(
-                      onChanged: (text) => StoreProvider.of<AppState>(context)
-                          .dispatch(UpdateUsername(text: text)),
-                    ),
-                    TextField(
-                      obscureText: true,
-                      onChanged: (text) => StoreProvider.of<AppState>(context)
-                          .dispatch(UpdatePassword(text: text)),
-                    ),
                     RaisedButton(
                       child: const Text('SIGN IN'),
                       onPressed: () {
                         StoreProvider.of<AppState>(context)
-                            .dispatch(SignInBasic());
-                        // StoreProvider.of<AppState>(context)
-                        //     .dispatch(Action.LaunchAuthPage());
-                        // StoreProvider.of<AppState>(context)
-                        //     .dispatch(Action.StoreAuthStep(step: 2));
+                            .dispatch(LaunchAuthPage());
+                        context.dispatch(
+                            StoreAuthStep((b) => b..step = AuthStep.signingIn));
                       },
                     ),
                   ],
@@ -87,10 +81,10 @@ class _TokenEntryState extends State<TokenEntry> {
         FlatButton(
           child: Icon(Icons.swap_vert),
           onPressed: () {
+            context.dispatch(
+                StoreAuthStep((b) => b..step = AuthStep.authenticating));
             StoreProvider.of<AppState>(context)
-                .dispatch(Action.StoreAuthStep(step: 3));
-            StoreProvider.of<AppState>(context)
-                .dispatch(Action.StoreAuthToken(token: token));
+                .dispatch(StoreAuthToken((b) => b..token = token));
           },
         ),
         // TODO: add a CANCEL button to return to auth step 0

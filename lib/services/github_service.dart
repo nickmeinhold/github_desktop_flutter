@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:github/github.dart';
-import 'package:github_desktop_flutter/models/profile.dart';
+import 'package:github_desktop_flutter/models/profile/profile.dart';
 
 class GitHubService {
   GitHubService(this._dio, this._github);
