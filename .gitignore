@@ -40,3 +40,6 @@ lib/generated_plugin_registrant.dart
 
 # cloud functions 
 /functions/build/
+
+# firebase local config
+.firebase/
