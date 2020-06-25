@@ -26,37 +26,48 @@ class _AuthPageState extends State<AuthPage> {
               alignment: Alignment.center,
               index: authStep.index,
               children: <Widget>[
-                Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      CircularProgressIndicator(),
-                      Text('Checking for auth token...')
-                    ]),
-                Column(
-                  children: [
-                    RaisedButton(
-                      child: const Text('SIGN IN'),
-                      onPressed: () {
-                        StoreProvider.of<AppState>(context)
-                            .dispatch(LaunchAuthPage());
-                        context.dispatch(
-                            StoreAuthStep((b) => b..step = AuthStep.signingIn));
-                      },
-                    ),
-                  ],
-                )
-
-                // TokenEntry(),
-                // Column(
-                //     mainAxisAlignment: MainAxisAlignment.center,
-                //     children: <Widget>[
-                //       CircularProgressIndicator(),
-                //       Text('Retrieving Profile...')
-                //     ]),
+                ProgressWithText(text: 'Checking for auth token...'),
+                SignInButton(),
+                TokenEntry(),
+                ProgressWithText(text: 'Retrieving Profile...'),
               ],
             ),
           );
         });
+  }
+}
+
+class SignInButton extends StatelessWidget {
+  const SignInButton({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        RaisedButton(
+          child: const Text('SIGN IN'),
+          onPressed: () {
+            context.dispatch(LaunchAuthPage());
+            context
+                .dispatch(StoreAuthStep((b) => b..step = AuthStep.signingIn));
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class ProgressWithText extends StatelessWidget {
+  final String text;
+  const ProgressWithText({Key key, @required this.text}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[CircularProgressIndicator(), Text(text)]);
   }
 }
 
@@ -83,8 +94,7 @@ class _TokenEntryState extends State<TokenEntry> {
           onPressed: () {
             context.dispatch(
                 StoreAuthStep((b) => b..step = AuthStep.authenticating));
-            StoreProvider.of<AppState>(context)
-                .dispatch(StoreAuthToken((b) => b..token = token));
+            context.dispatch(StoreAuthToken((b) => b..token = token));
           },
         ),
         // TODO: add a CANCEL button to return to auth step 0
