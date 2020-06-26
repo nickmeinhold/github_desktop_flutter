@@ -43,3 +43,4 @@ lib/generated_plugin_registrant.dart
 
 # firebase local config
 .firebase/
+macos/GoogleService-Info.plist
