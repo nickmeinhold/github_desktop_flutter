@@ -42,7 +42,7 @@ void main() {
 
       final problem = Problem((a) => a
         ..message = 'message'
-        ..type = ProblemType.signIn
+        ..type = ProblemType.authenticate
         ..info = MapBuilder({'test': 'test'})
         ..state.replace(AppState.init())
         ..trace = StackTrace.current.toString());

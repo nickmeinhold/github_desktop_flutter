@@ -1,3 +1,4 @@
+import 'package:github_desktop_flutter/services/auth_service.dart';
 import 'package:github_desktop_flutter/services/github_service.dart';
 import 'package:test/test.dart';
 
@@ -9,8 +10,10 @@ void main() {
   group('GitHub Service', () {
     test('deserializes json', () async {
       final token = '';
-      final service =
-          GitHubService(FakeDio(response: profile_json_data), FakeGitHub());
+      final service = GitHubService(
+        FakeDio(response: profile_json_data),
+        FakeGitHub(),
+      );
 
       final profile = await service.retrieveProfile(token);
 

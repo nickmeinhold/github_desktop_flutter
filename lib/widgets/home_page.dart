@@ -7,7 +7,7 @@ import 'package:github_desktop_flutter/models/app/app_state.dart';
 import 'package:github_desktop_flutter/models/profile/profile.dart';
 import 'package:github_desktop_flutter/widgets/account_info.dart';
 
-class MainPage extends StatelessWidget {
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppState, Profile>(
@@ -15,18 +15,24 @@ class MainPage extends StatelessWidget {
       converter: (store) => store.state.profile,
       builder: (context, profile) {
         return MaterialApp(
-          home: Center(
-            child: Material(
-              child: Row(children: [
+            home: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 0,
+            actions: [
+              Row(children: [
                 AccountInfo(),
                 MaterialButton(
-                  child: Text('SIGN OUT'),
+                  child: Text(
+                    'SIGN OUT',
+                    style: TextStyle(color: Colors.grey),
+                  ),
                   onPressed: () => context.dispatch(SignOut()),
                 )
               ]),
-            ),
+            ],
           ),
-        );
+        ));
       },
     );
   }

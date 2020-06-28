@@ -51,7 +51,7 @@ void main() {
         ..problem.info = MapBuilder({'a': 'b'})
         ..problem.state.replace(AppState.init())
         ..problem.trace = 'trace'
-        ..problem.type = ProblemType.signIn));
+        ..problem.type = ProblemType.authenticate));
 
       // check that the store has the expected value
       expect(store.state.problems.length, 1);
@@ -60,7 +60,7 @@ void main() {
       expect(problem.info, {'a': 'b'});
       expect(problem.state, AppState.init());
       expect(problem.trace, 'trace');
-      expect(problem.type, ProblemType.signIn);
+      expect(problem.type, ProblemType.authenticate);
     });
 
     test('_storeAuthStep stores the auth step', () {

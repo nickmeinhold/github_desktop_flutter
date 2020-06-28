@@ -14,7 +14,7 @@ void main() {
 
       final problem = Problem((a) => a
         ..message = 'message'
-        ..type = ProblemType.signIn
+        ..type = ProblemType.authenticate
         ..info = MapBuilder({'test': 'test'})
         ..state.replace(AppState.init())
         ..trace = trace.toString());
@@ -23,7 +23,7 @@ void main() {
       expect(problem.info, {'test': 'test'});
       expect(problem.state, AppState.init());
       expect(problem.trace, trace.toString());
-      expect(problem.type, ProblemType.signIn);
+      expect(problem.type, ProblemType.authenticate);
       expect(problem.message, 'message');
     });
 
@@ -32,13 +32,13 @@ void main() {
       // trace, state and info are nullable
       final problem = Problem((a) => a
         ..message = 'message'
-        ..type = ProblemType.signIn);
+        ..type = ProblemType.authenticate);
 
       // so the members should be:
       expect(problem.info, null);
       expect(problem.state, null);
       expect(problem.trace, null);
-      expect(problem.type, ProblemType.signIn);
+      expect(problem.type, ProblemType.authenticate);
       expect(problem.message, 'message');
     });
 
@@ -51,17 +51,17 @@ void main() {
           throwsA(const TypeMatcher<BuiltValueNullFieldError>()));
 
       // and no message should also throw
-      expect(() => Problem((a) => a..type = ProblemType.signIn),
+      expect(() => Problem((a) => a..type = ProblemType.authenticate),
           throwsA(const TypeMatcher<BuiltValueNullFieldError>()));
 
       // whereas missing trace, state or info should be fine
       expect(
           Problem((a) => a
             ..message = 'message'
-            ..type = ProblemType.signIn),
+            ..type = ProblemType.authenticate),
           equals(Problem((a) => a
             ..message = 'message'
-            ..type = ProblemType.signIn)));
+            ..type = ProblemType.authenticate)));
     });
   });
 }

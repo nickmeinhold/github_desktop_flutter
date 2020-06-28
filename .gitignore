@@ -38,6 +38,9 @@ lib/generated_plugin_registrant.dart
 
 ######################### - my ignores 
 
+# generated files 
+*.g.dart
+
 # cloud functions 
 /functions/build/
 
