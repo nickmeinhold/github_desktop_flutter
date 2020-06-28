@@ -37,7 +37,7 @@ class _GDFAppState extends State<GDFApp> {
           middleware: [
             ...createMiddleware(
               PlatformService(),
-              AuthService(githubClientId, githubClientSecret, githubScopes),
+              AuthService(githubClientId, githubScopes),
               GitHubService(Dio(), GitHub()),
             ),
           ],

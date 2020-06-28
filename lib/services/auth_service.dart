@@ -5,14 +5,12 @@ import 'package:oauth2/oauth2.dart' as oauth2;
 import 'package:url_launcher/url_launcher.dart';
 
 class AuthService {
-  AuthService(
-      this._githubClientId, this._githubClientSecret, this._githubScopes) {
+  AuthService(this._githubClientId, this._githubScopes) {
     // create the grant used to generate the authorization url
     _grant = oauth2.AuthorizationCodeGrant(
       _githubClientId,
       _authorizationEndpoint,
       _tokenEndpoint,
-      secret: _githubClientSecret,
       httpClient: _JsonAcceptingHttpClient(),
     );
   }
@@ -21,7 +19,6 @@ class AuthService {
   // used to generate the authorization url
   oauth2.AuthorizationCodeGrant _grant;
   final String _githubClientId;
-  final String _githubClientSecret;
   final List<String> _githubScopes;
 
   final _authorizationEndpoint =

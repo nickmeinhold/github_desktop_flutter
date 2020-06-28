@@ -23,7 +23,7 @@ void main() async {
       remoteDevtools,
       ...createMiddleware(
         PlatformService(),
-        AuthService(githubClientId, githubClientSecret, githubScopes),
+        AuthService(githubClientId, githubScopes),
         GitHubService(Dio(), GitHub()),
       ),
     ],
