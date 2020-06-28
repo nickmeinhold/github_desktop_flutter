@@ -17,7 +17,6 @@ void main() {
     testWidgets('increments auth step and shows relevant UI',
         (WidgetTester tester) async {
       final signinButtonFinder = find.text('SIGN IN');
-      final tokenEntryWidgetFinder = find.byType(TokenEntry);
       final submitButtonFinder = find.byIcon(Icons.swap_vert);
       final retrievingFinder = find.text('Retrieving Profile...');
 
@@ -51,9 +50,6 @@ void main() {
 
       // check that the auth step has been incremented
       expect(store.state.authStep, 2);
-
-      // check token entry UI is now shown
-      expect(tokenEntryWidgetFinder, findsOneWidget);
 
       // tap submit button and check next UI is shown
       await tester.tap(submitButtonFinder);

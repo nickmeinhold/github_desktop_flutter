@@ -38,9 +38,17 @@ lib/generated_plugin_registrant.dart
 
 ######################### - my ignores 
 
+# generated files 
+*.g.dart
+
 # cloud functions 
 /functions/build/
 
 # firebase local config
 .firebase/
-macos/GoogleService-Info.plist
+
+# firebase project credentials file
+macos/Runner/GoogleService-Info.plist
+
+# credentials 
+lib/util/github_oauth_credentials.dart

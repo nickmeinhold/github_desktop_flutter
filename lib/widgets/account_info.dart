@@ -22,13 +22,14 @@ class AccountInfo extends StatelessWidget {
                   children: [
                     Text(
                       profile.name,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       profile.email,
                       style: DefaultTextStyle.of(context)
                           .style
-                          .apply(fontSizeFactor: 0.8),
+                          .apply(fontSizeFactor: 0.8, color: Colors.black),
                     )
                   ]),
             )

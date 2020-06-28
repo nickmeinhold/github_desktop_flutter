@@ -19,6 +19,7 @@ dependencies:
   firebase_auth:
   github:
   dio:
+  oauth2:
   url_launcher:
   shared_preferences:
 

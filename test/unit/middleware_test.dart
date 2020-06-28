@@ -1,4 +1,4 @@
-import 'package:github_desktop_flutter/actions/auth/launch_auth_page.dart';
+import 'package:github_desktop_flutter/actions/auth/authenticate.dart';
 import 'package:github_desktop_flutter/actions/auth/store_auth_token.dart';
 import 'package:github_desktop_flutter/middleware/middleware.dart';
 import 'package:github_desktop_flutter/models/app/app_state.dart';
@@ -8,6 +8,7 @@ import 'package:mockito/mockito.dart';
 import 'package:redux/redux.dart';
 import 'package:test/test.dart';
 
+import '../mocks/auth_service_mocks.dart';
 import '../mocks/github_service_mocks.dart';
 import '../mocks/platform_service_mocks.dart';
 
@@ -19,13 +20,16 @@ void main() {
         '_storeTokenAndRetrieveProfile saves token, retrieves and stores profile',
         () async {
       final fakePlatformService = FakePlatformService();
+      final fakeAuthService = FakeAuthService(
+          'githubClientId', 'githubClientSecret', ['githubScopes']);
       final fakeGitHubService = FakeGitHubService();
 
       // create a basic store with the mocked out middleware
       final store = Store<AppState>(
         appReducer,
         initialState: AppState.init(),
-        middleware: createMiddleware(fakePlatformService, fakeGitHubService),
+        middleware: createMiddleware(
+            fakePlatformService, fakeAuthService, fakeGitHubService),
       );
 
       // dispatch action to observe the auth state
@@ -46,11 +50,11 @@ void main() {
       final store = Store<AppState>(
         appReducer,
         initialState: AppState.init(),
-        middleware: createMiddleware(fakePlatformService, null),
+        middleware: createMiddleware(fakePlatformService, null, null),
       );
 
       // dispatch action to launch the auth page
-      await store.dispatch(LaunchAuthPage());
+      await store.dispatch(Authenticate());
 
       // TODO: check that the service got the expected url string
     });
