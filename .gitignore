@@ -43,3 +43,9 @@ lib/generated_plugin_registrant.dart
 
 # firebase local config
 .firebase/
+
+# firebase project credentials file
+macos/Runner/GoogleService-Info.plist
+
+# credentials 
+lib/util/github_oauth_credentials.dart
