@@ -7,10 +7,12 @@ import 'package:github_desktop_flutter/middleware/middleware.dart';
 import 'package:github_desktop_flutter/models/app/app_state.dart';
 import 'package:github_desktop_flutter/models/profile/profile.dart';
 import 'package:github_desktop_flutter/reducers/reducers.dart';
+import 'package:github_desktop_flutter/services/auth_service.dart';
 import 'package:github_desktop_flutter/services/github_service.dart';
 import 'package:github_desktop_flutter/services/platform_service.dart';
+import 'package:github_desktop_flutter/util/github_oauth_credentials.dart';
 import 'package:github_desktop_flutter/widgets/auth_page.dart';
-import 'package:github_desktop_flutter/widgets/main_page.dart';
+import 'package:github_desktop_flutter/widgets/home_page.dart';
 import 'package:redux/redux.dart';
 
 class GDFApp extends StatefulWidget {
@@ -35,6 +37,7 @@ class _GDFAppState extends State<GDFApp> {
           middleware: [
             ...createMiddleware(
               PlatformService(),
+              AuthService(githubClientId, githubClientSecret, githubScopes),
               GitHubService(Dio(), GitHub()),
             ),
           ],
@@ -54,7 +57,7 @@ class _GDFAppState extends State<GDFApp> {
           builder: (context, profile) {
             return (profile == null || profile.id == null)
                 ? AuthPage()
-                : MainPage();
+                : HomePage();
           },
         ),
       ),

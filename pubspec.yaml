@@ -18,6 +18,7 @@ dependencies:
 
   github:
   dio:
+  oauth2:
   url_launcher:
   shared_preferences:
 

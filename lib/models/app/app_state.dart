@@ -27,7 +27,7 @@ abstract class AppState implements Built<AppState, AppStateBuilder> {
 
   factory AppState.init() => AppState((a) => a
     ..problems = ListBuilder<Problem>()
-    ..authStep = AuthStep.waitingForInput);
+    ..authStep = AuthStep.checking);
 
   factory AppState([void Function(AppStateBuilder) updates]) = _$AppState;
 

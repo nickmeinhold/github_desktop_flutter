@@ -1,5 +1,5 @@
-import 'package:github_desktop_flutter/actions/auth/check_for_auth_token.dart';
-import 'package:github_desktop_flutter/actions/auth/launch_auth_page.dart';
+import 'package:github_desktop_flutter/actions/auth/check_auth_state.dart';
+import 'package:github_desktop_flutter/actions/auth/authenticate.dart';
 import 'package:github_desktop_flutter/actions/auth/sign_out.dart';
 import 'package:github_desktop_flutter/actions/auth/store_auth_step.dart';
 import 'package:github_desktop_flutter/actions/auth/store_auth_token.dart';
@@ -8,10 +8,17 @@ import 'package:github_desktop_flutter/actions/profile/store_profile.dart';
 import 'package:github_desktop_flutter/enums/auth_step.dart';
 import 'package:github_desktop_flutter/enums/problem_type.dart';
 import 'package:github_desktop_flutter/models/app/app_state.dart';
-import 'package:github_desktop_flutter/models/app/problem.dart';
+import 'package:github_desktop_flutter/services/auth_service.dart';
 import 'package:github_desktop_flutter/services/github_service.dart';
 import 'package:github_desktop_flutter/services/platform_service.dart';
 import 'package:redux/redux.dart';
+
+typedef AuthenticationMiddleware = void Function(
+    Store<AppState> store, Authenticate action, NextDispatcher next);
+typedef CheckAuthStateMiddleware = void Function(
+    Store<AppState> store, CheckAuthState action, NextDispatcher next);
+typedef SignOutMiddleware = void Function(
+    Store<AppState> store, SignOut action, NextDispatcher next);
 
 /// Middleware is used for a variety of things:
 /// - Logging
@@ -22,109 +29,117 @@ import 'package:redux/redux.dart';
 ///
 /// The output of an action can perform another action using the [NextDispatcher]
 ///
-List<Middleware<AppState>> createMiddleware(
-    PlatformService platformService, GitHubService githubService) {
+List<Middleware<AppState>> createMiddleware(PlatformService platformService,
+    AuthService authService, GitHubService gitHubService) {
   return [
-    TypedMiddleware<AppState, StoreAuthToken>(
-      _storeTokenAndRetrieveProfile(platformService, githubService),
+    TypedMiddleware<AppState, CheckAuthState>(
+      _checkAuthState(platformService, gitHubService),
     ),
-    TypedMiddleware<AppState, LaunchAuthPage>(
-      _launchAuthPage(platformService),
-    ),
-    TypedMiddleware<AppState, CheckForAuthToken>(
-      _checkForAuthToken(platformService),
+    TypedMiddleware<AppState, Authenticate>(
+      _authenticate(platformService, authService, gitHubService),
     ),
     TypedMiddleware<AppState, SignOut>(
       _signOut(platformService),
     ),
+    // TypedMiddleware<AppState, StoreAuthToken>(
+    //   _storeTokenAndRetrieveProfile(platformService, githubService),
+    // ),
   ];
 }
 
-void Function(Store<AppState> store, StoreAuthToken action, NextDispatcher next)
-    _storeTokenAndRetrieveProfile(
-        PlatformService platformService, GitHubService githubService) {
-  return (Store<AppState> store, StoreAuthToken action,
-      NextDispatcher next) async {
-    next(action);
+CheckAuthStateMiddleware _checkAuthState(
+        PlatformService platformService, GitHubService gitHubService) =>
+    (store, action, next) async {
+      next(action);
 
-    try {
-      // save the token to shared_preferences
-      await platformService.store(token: store.state.authToken);
-
-      // retrieve and store profile
-      final profile =
-          await githubService.retrieveProfile(store.state.authToken);
-      store.dispatch(StoreProfile((b) => b..profile.replace(profile)));
-    } on Exception catch (error, trace) {
-      store.dispatch(AddProblem.from(
-        message: error.toString(),
-        type: ProblemType.signIn,
-        traceString: trace.toString(),
-      ));
-    }
-  };
-}
-
-void Function(Store<AppState> store, LaunchAuthPage action, NextDispatcher next)
-    _launchAuthPage(PlatformService platformService) {
-  return (Store<AppState> store, LaunchAuthPage action,
-      NextDispatcher next) async {
-    next(action);
-
-    final url = 'https://github.com/login/oauth/authorize'
-        '?client_id=987bd965a05598c5e090'
-        '&scope=public_repo%20read:user%20user:email';
-
-    try {
-      platformService.launch(url: url);
-    } catch (error, trace) {
-      store.dispatch(AddProblem(
-        (b) => b
-          ..problem.replace(Problem((b) => b
-            ..type = ProblemType.signIn
-            ..message = error.toString()
-            ..trace = trace.toString())),
-      ));
-    }
-  };
-}
-
-void Function(
-        Store<AppState> store, CheckForAuthToken action, NextDispatcher next)
-    _checkForAuthToken(PlatformService platformService) {
-  return (Store<AppState> store, CheckForAuthToken action,
-      NextDispatcher next) async {
-    next(action);
-
-    try {
-      final token = await platformService.retrieveToken();
-      if (token != null) {
-        store.dispatch(StoreAuthToken((b) => b..token = token));
+      try {
+        final token = await platformService.retrieveToken();
+        if (token != null) {
+          // add the token to the store
+          store.dispatch(StoreAuthToken((b) => b..token = token));
+          // retrieve the profile with the token
+          final profile = await gitHubService.retrieveProfile(token);
+          // add the profile to the store (which also triggers an app-level
+          // rebuild with home page in place of auth page)
+          store.dispatch(StoreProfile((b) => b..profile.replace(profile)));
+          // lastly, reset the auth step for when/if the user navigates back
+          store.dispatch(
+              StoreAuthStep((b) => b..step = AuthStep.waitingForInput));
+        } else {
+          store.dispatch(
+              StoreAuthStep((b) => b..step = AuthStep.waitingForInput));
+        }
+      } catch (error, trace) {
+        store.dispatch(AddProblem.from(
+            message: error.toString(),
+            type: ProblemType.checkAuthState,
+            traceString: trace.toString()));
       }
-      store.dispatch(StoreAuthStep((b) => b..step = AuthStep.waitingForInput));
-    } catch (error, trace) {
-      store.dispatch(AddProblem.from(
+    };
+
+AuthenticationMiddleware _authenticate(PlatformService platformService,
+        AuthService authService, GitHubService githubService) =>
+    (store, action, next) async {
+      next(action);
+
+      try {
+        final token = await authService.getAuthToken();
+
+        await platformService.store(token: token);
+
+        store.dispatch(StoreAuthToken((b) => b..token = token));
+        store
+            .dispatch(StoreAuthStep((b) => b..step = AuthStep.waitingForInput));
+
+        // retrive and store the profile
+        final profile = await githubService.retrieveProfile(token);
+        store.dispatch(StoreProfile((b) => b..profile.replace(profile)));
+      } catch (error, trace) {
+        store.dispatch(AddProblem.from(
+            message: error.toString(),
+            type: ProblemType.authenticate,
+            traceString: trace.toString()));
+      }
+    };
+
+SignOutMiddleware _signOut(PlatformService platformService) =>
+    (store, action, next) async {
+      next(action);
+
+      try {
+        // save null to shared_preferences
+        await platformService.store(token: null);
+      } on Exception catch (error, trace) {
+        store.dispatch(AddProblem.from(
           message: error.toString(),
-          type: ProblemType.signIn,
-          traceString: trace.toString()));
-    }
-  };
-}
+          type: ProblemType.signOut,
+          traceString: trace.toString(),
+        ));
+      }
+    };
 
-void Function(Store<AppState> store, SignOut action, NextDispatcher next)
-    _signOut(PlatformService platformService) {
-  return (Store<AppState> store, SignOut action, NextDispatcher next) async {
-    next(action);
+// typedef StoreAuthTokenMiddleware = void Function(
+//     Store<AppState> store, StoreAuthToken action, NextDispatcher next);
 
-    try {
-      // save null to shared_preferences
-      await platformService.store(token: null);
-    } on Exception catch (error, trace) {
-      store.dispatch(AddProblem.from(
-        message: error.toString(),
-        type: ProblemType.signIn,
-        traceString: trace.toString(),
-      ));
-    }
-  };
-}
+// StoreAuthTokenMiddleware _storeTokenAndRetrieveProfile(
+//     PlatformService platformService, GitHubService githubService) {
+//   return (store, action, next) async {
+//     next(action);
+
+//     try {
+//       // save the token to shared_preferences
+//       await platformService.store(token: store.state.authToken);
+
+//       // retrieve and store profile
+//       final profile =
+//           await githubService.retrieveProfile(store.state.authToken);
+//       store.dispatch(StoreProfile((b) => b..profile.replace(profile)));
+//     } on Exception catch (error, trace) {
+//       store.dispatch(AddProblem.from(
+//         message: error.toString(),
+//         type: ProblemType.signIn,
+//         traceString: trace.toString(),
+//       ));
+//     }
+//   };
+// }

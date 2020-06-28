@@ -17,15 +17,4 @@ class GitHubService {
 
     return Profile.fromJsonMap(response.data as Map<String, dynamic>);
   }
-
-  void addBasicCredentials(String username, String password) {
-    final auth = Authentication.basic(username, password);
-    _github.auth = auth;
-  }
-
-  Future<void> call() async {
-    final repo = await _github.repositories.getRepository(
-        RepositorySlug('nickmeinhold', 'github_desktop_flutter'));
-    print(repo.description);
-  }
 }

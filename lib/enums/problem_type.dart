@@ -8,7 +8,9 @@ part 'problem_type.g.dart';
 class ProblemType extends EnumClass {
   static Serializer<ProblemType> get serializer => _$problemTypeSerializer;
 
-  static const ProblemType signIn = _$signIn;
+  static const ProblemType checkAuthState = _$checkAuthState;
+  static const ProblemType authenticate = _$authenticate;
+  static const ProblemType signOut = _$signOut;
 
   const ProblemType._(String name) : super(name);
 

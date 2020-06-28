@@ -11,7 +11,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:github_desktop_flutter/reducers/reducers.dart';
 import 'package:redux/redux.dart';
 import 'package:github_desktop_flutter/models/app/app_state.dart';
-import 'package:github_desktop_flutter/widgets/main_page.dart';
+import 'package:github_desktop_flutter/widgets/home_page.dart';
 
 import '../utils/image_test_utils.dart';
 
@@ -35,7 +35,7 @@ void main() {
         // create a StoreProvider to wrap widget
         StoreProvider<AppState>(
           store: store,
-          child: MaterialApp(home: MainPage()),
+          child: MaterialApp(home: HomePage()),
         ),
       );
     });
