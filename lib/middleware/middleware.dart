@@ -33,7 +33,7 @@ List<Middleware<AppState>> createMiddleware(PlatformService platformService,
     AuthService authService, GitHubService gitHubService) {
   return [
     TypedMiddleware<AppState, CheckAuthState>(
-      _checkAuthState(platformService, gitHubService),
+      _checkAuthState(platformService, authService, gitHubService),
     ),
     TypedMiddleware<AppState, Authenticate>(
       _authenticate(platformService, authService, gitHubService),
@@ -47,8 +47,8 @@ List<Middleware<AppState>> createMiddleware(PlatformService platformService,
   ];
 }
 
-CheckAuthStateMiddleware _checkAuthState(
-        PlatformService platformService, GitHubService gitHubService) =>
+CheckAuthStateMiddleware _checkAuthState(PlatformService platformService,
+        AuthService authService, GitHubService gitHubService) =>
     (store, action, next) async {
       next(action);
 
@@ -65,6 +65,8 @@ CheckAuthStateMiddleware _checkAuthState(
           // lastly, reset the auth step for when/if the user navigates back
           store.dispatch(
               StoreAuthStep((b) => b..step = AuthStep.waitingForInput));
+
+          await authService.signInWithFirebase(token);
         } else {
           store.dispatch(
               StoreAuthStep((b) => b..step = AuthStep.waitingForInput));

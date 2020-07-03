@@ -1,20 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:oauth2/oauth2.dart' as oauth2;
 import 'package:url_launcher/url_launcher.dart';
 
 class AuthService {
-  AuthService(this._githubClientId, this._githubScopes) {
-    // create the grant used to generate the authorization url
-    _grant = oauth2.AuthorizationCodeGrant(
-      _githubClientId,
-      _authorizationEndpoint,
-      _tokenEndpoint,
-      httpClient: _JsonAcceptingHttpClient(),
-    );
-  }
-
   HttpServer _redirectServer;
   // used to generate the authorization url
   oauth2.AuthorizationCodeGrant _grant;
@@ -25,6 +16,16 @@ class AuthService {
       Uri.parse('https://github.com/login/oauth/authorize');
   final _tokenEndpoint =
       Uri.parse('https://github.com/login/oauth/access_token');
+
+  AuthService(this._githubClientId, this._githubScopes) {
+    // create the grant used to generate the authorization url
+    _grant = oauth2.AuthorizationCodeGrant(
+      _githubClientId,
+      _authorizationEndpoint,
+      _tokenEndpoint,
+      httpClient: _JsonAcceptingHttpClient(),
+    );
+  }
 
   Future<String> getAuthToken() async {
     await _redirectServer?.close();
@@ -48,7 +49,18 @@ class AuthService {
     dynamic jsonObject = json.decode(responseBody);
     final token = jsonObject['access_token'] as String;
 
+    await signInWithFirebase(token);
+
     return token;
+  }
+
+  void signInWithFirebase(String token) async {
+    final credential = GithubAuthProvider.getCredential(token: token);
+
+    final authResult =
+        await FirebaseAuth.instance.signInWithCredential(credential);
+
+    final user = authResult.user;
   }
 
   Future<void> _redirect(Uri authorizationUrl) async {
